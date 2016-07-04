@@ -21,6 +21,7 @@ pub fn parse(line: String, last_val: i32) -> i32 {
     }
 
     exit_val = match &*line[0] {
+        "echo" => builtin_echo(&line[1..]),
         "help" => builtin_help(&line[1..]),
         "true" => builtin_true(),
         "false" => builtin_false(),
