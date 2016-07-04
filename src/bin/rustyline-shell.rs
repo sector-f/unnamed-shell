@@ -2,6 +2,7 @@ extern crate rustyline;
 extern crate unnamed_shell;
 
 use unnamed_shell::parse::parse;
+use unnamed_shell::prompt::get_prompt;
 
 use std::io::{stderr, Write};
 use rustyline::Editor;
@@ -15,10 +16,7 @@ fn main() {
     let mut exit_val: i32 = 0;
 
     loop {
-        let prompt = match exit_val {
-            0 => format!("> "),
-            _ => format!("({})> ", exit_val),
-        };
+        let prompt = get_prompt(exit_val);
 
         let line_result = editor.readline(&prompt);
         match line_result {
