@@ -16,6 +16,10 @@ pub fn parse(line: String, last_val: i32) -> i32 {
         Err(_) => { return -1 },
     };
 
+    if line.is_empty() {
+        return 0
+    }
+
     exit_val = match &*line[0] {
         "help" => builtin_help(&line[1..]),
         "true" => builtin_true(),
