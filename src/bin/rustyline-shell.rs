@@ -15,10 +15,15 @@ fn main() {
     let mut exit_val: i32 = 0;
 
     loop {
-        let line_result = editor.readline(&format!("{}> ", exit_val));
+        let prompt = match exit_val {
+            0 => format!("> "),
+            _ => format!("({})> ", exit_val),
+        };
+
+        let line_result = editor.readline(&prompt);
         match line_result {
             Ok(s) => {
-                exit_val = parse(&s, exit_val);
+                exit_val = parse(s, exit_val);
             },
             Err(e) => {
                 let _ = writeln!(stderr(), "Error: {}", e);
