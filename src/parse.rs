@@ -9,7 +9,6 @@ use self::shellexpand::LookupError;
 
 pub fn parse(line: String, last_val: i32) -> i32 {
     let line_result = parse_to_arguments(line);
-    let mut exit_val = 0;
 
     let line = match line_result {
         Ok(s) => s,
@@ -20,7 +19,7 @@ pub fn parse(line: String, last_val: i32) -> i32 {
         return 0
     }
 
-    exit_val = match &*line[0] {
+    return match &*line[0] {
         "echo" => builtin_echo(&line[1..]),
         "help" => builtin_help(&line[1..]),
         "true" => builtin_true(),
@@ -30,7 +29,6 @@ pub fn parse(line: String, last_val: i32) -> i32 {
         _ => command::run_external_command(&line),
     };
 
-    exit_val
 }
 
 fn parse_to_arguments(line: String) -> Result<Vec<String>, LookupError<VarError>> {

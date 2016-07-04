@@ -4,24 +4,32 @@ pub fn run_external_command(line: &[String]) -> i32 {
 
     let command = &line[0];
     let arguments = &line[1..];
-    match Command::new(command).args(arguments).spawn() {
+
+    return match Command::new(command).args(arguments).spawn() {
         Ok(mut child) => {
-            return child.wait().unwrap().code().unwrap()
+            match child.wait() {
+                Ok(status) => {
+                    match status.code() {
+                        Some(val) => val,
+                        None => {
+                            let _ = writeln!(stderr(), "Error: could not determine exit value");
+                            -1
+                        },
+                    }
+                },
+                Err(e) => {
+                    let _ = writeln!(stderr(), "Error: {}", e);
+                    -1
+                },
+            }
         },
         Err(e) => {
             let _ = writeln!(stderr(), "Error: {}", e);
             match e.kind() {
-                ErrorKind::PermissionDenied => {
-                    return 126
-                },
-                ErrorKind::NotFound => {
-                    return 127
-                },
-                _ => {
-                    return -1
-                },
+                ErrorKind::PermissionDenied => 126,
+                ErrorKind::NotFound => 127,
+                _ => -1,
             }
         },
-    }
-    0
+    };
 }
